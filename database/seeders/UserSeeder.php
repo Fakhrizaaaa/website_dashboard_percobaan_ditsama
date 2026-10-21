@@ -10,22 +10,33 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // Cek dulu, kalau email belum ada, maka buat baru. Kalau sudah ada, Lewati.
+        // 1. Akun Admin
         User::firstOrCreate(
             ['email' => 'admin@gmail.com'],
             [
-                'name' => 'Admin Perpustakaan',
+                'name' => 'Administrator Kampus',
                 'password' => Hash::make('password123'),
                 'role' => 'admin',
             ]
         );
 
+        // 2. Akun Dosen
         User::firstOrCreate(
-            ['email' => 'siswa@gmail.com'],
+            ['email' => 'dosen@gmail.com'],
             [
-                'name' => 'Siswa Perpustakaan',
+                'name' => 'Bapak Dosen, M.Kom.',
                 'password' => Hash::make('password123'),
-                'role' => 'siswa',
+                'role' => 'dosen',
+            ]
+        );
+
+        // 3. Akun Mahasiswa
+        User::firstOrCreate(
+            ['email' => 'mhs@gmail.com'],
+            [
+                'name' => 'Fakhriza (Mahasiswa)',
+                'password' => Hash::make('password123'),
+                'role' => 'mhs',
             ]
         );
     }

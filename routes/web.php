@@ -17,21 +17,32 @@ Route::get('/', function () {
 });
 
 // Route utama /dashboard yang memisahkan redirect berdasarkan Role
+// Route utama /dashboard sebagai pengarah role
 Route::get('/dashboard', function () {
-    if (Auth::user()->role === 'admin') {
+    $role = Auth::user()->role;
+
+    if ($role === 'admin') {
         return redirect('/admin/dashboard');
+    } elseif ($role === 'dosen') {
+        return redirect('/dosen/dashboard');
+    } else {
+        return redirect('/mhs/dashboard');
     }
-    return redirect('/siswa/dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-// Group Route khusus ADMIN
+// Admin Routes
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard');
 });
 
-// Group Route khusus SISWA
-Route::middleware(['auth', 'role:siswa'])->group(function () {
-    Route::get('/siswa/dashboard', [DashboardController::class, 'siswaDashboard'])->name('siswa.dashboard');
+// Dosen Routes
+Route::middleware(['auth', 'role:dosen'])->group(function () {
+    Route::get('/dosen/dashboard', [DashboardController::class, 'dosenDashboard'])->name('dosen.dashboard');
+});
+
+// Mahasiswa Routes
+Route::middleware(['auth', 'role:mhs'])->group(function () {
+    Route::get('/mhs/dashboard', [DashboardController::class, 'mhsDashboard'])->name('mhs.dashboard');
 });
 
 require __DIR__.'/auth.php';

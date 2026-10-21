@@ -6,15 +6,18 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    // Tampilan Dashboard untuk Admin
     public function adminDashboard()
     {
         return view('admin.dashboard');
     }
 
-    // Tampilan Dashboard untuk Siswa
-    public function siswaDashboard()
+    public function dosenDashboard()
     {
-        return view('siswa.dashboard');
+        return view('dosen.dashboard');
+    }
+
+    public function mhsDashboard()
+    {
+        return view('mhs.dashboard');
     }
 }
