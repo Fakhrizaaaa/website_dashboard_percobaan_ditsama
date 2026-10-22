@@ -12,9 +12,44 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard', 'admin.dashboard', 'dosen.dashboard', 'mhs.dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    @if (Auth::user()->role === 'admin')
+                        <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                            {{ __('Kelola User') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.mata-kuliah.index')" :active="request()->routeIs('admin.mata-kuliah.*')">
+                            {{ __('Mata Kuliah') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.perkuliahan.index')" :active="request()->routeIs('admin.perkuliahan.*')">
+                            {{ __('Perkuliahan') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.ujian.index')" :active="request()->routeIs('admin.ujian.*')">
+                            {{ __('Ujian') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.pengumuman.index')" :active="request()->routeIs('admin.pengumuman.*')">
+                            {{ __('Pengumuman') }}
+                        </x-nav-link>
+                    @elseif (Auth::user()->role === 'dosen')
+                        <x-nav-link :href="route('dosen.mata-kuliah.index')" :active="request()->routeIs('dosen.mata-kuliah.*')">
+                            {{ __('Mata Kuliah') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('dosen.perkuliahan.index')" :active="request()->routeIs('dosen.perkuliahan.*')">
+                            {{ __('Perkuliahan') }}
+                        </x-nav-link>
+                    @elseif (Auth::user()->role === 'mhs')
+                        <x-nav-link :href="route('mhs.jadwal-kuliah')" :active="request()->routeIs('mhs.jadwal-kuliah')">
+                            {{ __('Jadwal Kuliah') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('mhs.jadwal-ujian')" :active="request()->routeIs('mhs.jadwal-ujian')">
+                            {{ __('Jadwal Ujian') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('mhs.informasi')" :active="request()->routeIs('mhs.informasi')">
+                            {{ __('Informasi') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -67,9 +102,44 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard', 'admin.dashboard', 'dosen.dashboard', 'mhs.dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            @if (Auth::user()->role === 'admin')
+                <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                    {{ __('Kelola User') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.mata-kuliah.index')" :active="request()->routeIs('admin.mata-kuliah.*')">
+                    {{ __('Mata Kuliah') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.perkuliahan.index')" :active="request()->routeIs('admin.perkuliahan.*')">
+                    {{ __('Perkuliahan') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.ujian.index')" :active="request()->routeIs('admin.ujian.*')">
+                    {{ __('Ujian') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.pengumuman.index')" :active="request()->routeIs('admin.pengumuman.*')">
+                    {{ __('Pengumuman') }}
+                </x-responsive-nav-link>
+            @elseif (Auth::user()->role === 'dosen')
+                <x-responsive-nav-link :href="route('dosen.mata-kuliah.index')" :active="request()->routeIs('dosen.mata-kuliah.*')">
+                    {{ __('Mata Kuliah') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('dosen.perkuliahan.index')" :active="request()->routeIs('dosen.perkuliahan.*')">
+                    {{ __('Perkuliahan') }}
+                </x-responsive-nav-link>
+            @elseif (Auth::user()->role === 'mhs')
+                <x-responsive-nav-link :href="route('mhs.jadwal-kuliah')" :active="request()->routeIs('mhs.jadwal-kuliah')">
+                    {{ __('Jadwal Kuliah') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('mhs.jadwal-ujian')" :active="request()->routeIs('mhs.jadwal-ujian')">
+                    {{ __('Jadwal Ujian') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('mhs.informasi')" :active="request()->routeIs('mhs.informasi')">
+                    {{ __('Informasi') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

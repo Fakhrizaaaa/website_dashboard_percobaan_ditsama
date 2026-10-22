@@ -13,19 +13,19 @@
 
                 <!-- Grid Menu Dosen -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- 1. Kelola Mata Kuliah -->
-                    <div class="p-5 bg-indigo-50 border border-indigo-200 rounded-lg hover:shadow-md transition">
+                    <!-- 1. Kelola Mata Kuliah (sudah jadi link) -->
+                    <a href="{{ route('dosen.mata-kuliah.index') }}" class="block p-5 bg-indigo-50 border border-indigo-200 rounded-lg hover:shadow-md transition">
                         <h4 class="font-bold text-indigo-800 text-lg mb-1">1. Kelola Mata Kuliah</h4>
-                        <p class="text-sm text-gray-600 mb-3">Lihat & kelola silabus serta materi kuliah yang diampu.</p>
+                        <p class="text-sm text-gray-600 mb-3">Tambah dan atur mata kuliah yang kamu ampu.</p>
                         <span class="inline-block px-3 py-1 bg-indigo-600 text-white text-xs font-semibold rounded">Akses Pengampu</span>
-                    </div>
+                    </a>
 
                     <!-- 2. Kelola Perkuliahan -->
-                    <div class="p-5 bg-teal-50 border border-teal-200 rounded-lg hover:shadow-md transition">
+                    <a href="{{ route('dosen.perkuliahan.index') }}" class="block p-5 bg-teal-50 border border-teal-200 rounded-lg hover:shadow-md transition">
                         <h4 class="font-bold text-teal-800 text-lg mb-1">2. Kelola Perkuliahan</h4>
-                        <p class="text-sm text-gray-600 mb-3">Input presensi, jurnal mengajar, dan nilai mahasiswa.</p>
+                        <p class="text-sm text-gray-600 mb-3">Atur jadwal kuliah (hari, jam, ruangan) untuk mata kuliahmu.</p>
                         <span class="inline-block px-3 py-1 bg-teal-600 text-white text-xs font-semibold rounded">Akses Pengampu</span>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
