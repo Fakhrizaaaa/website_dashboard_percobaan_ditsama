@@ -1,16 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Tambah Mata Kuliah</h2>
+        <h2 class="text-xl font-semibold text-gray-800">Tambah Mata Kuliah</h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm sm:rounded-lg p-6">
-                <form method="POST" action="{{ route($prefix.'.mata-kuliah.store') }}">
-                    @csrf
-                    @include('mata-kuliah._form')
-                </form>
-            </div>
-        </div>
-    </div>
+    <x-form-card :action="route($prefix.'.mata-kuliah.store')">
+        @include('mata-kuliah._form')
+    </x-form-card>
 </x-app-layout>

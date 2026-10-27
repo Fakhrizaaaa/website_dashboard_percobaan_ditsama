@@ -1,29 +1,29 @@
-<div class="space-y-4">
+<div class="space-y-5">
     <div>
         <x-input-label for="mata_kuliah_id" value="Mata Kuliah" />
-        <select id="mata_kuliah_id" name="mata_kuliah_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+        <x-select-input id="mata_kuliah_id" name="mata_kuliah_id" class="mt-1" required>
             <option value="">-- Pilih mata kuliah --</option>
             @foreach ($mataKuliahList as $mk)
                 <option value="{{ $mk->id }}" @selected(old('mata_kuliah_id', $perkuliahan->mata_kuliah_id) == $mk->id)>
                     {{ $mk->kode }} - {{ $mk->nama }}
                 </option>
             @endforeach
-        </select>
+        </x-select-input>
         <x-input-error :messages="$errors->get('mata_kuliah_id')" class="mt-2" />
     </div>
 
     <div>
         <x-input-label for="hari" value="Hari" />
-        <select id="hari" name="hari" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+        <x-select-input id="hari" name="hari" class="mt-1" required>
             <option value="">-- Pilih hari --</option>
             @foreach ($hariList as $hari)
                 <option value="{{ $hari }}" @selected(old('hari', $perkuliahan->hari) === $hari)>{{ $hari }}</option>
             @endforeach
-        </select>
+        </x-select-input>
         <x-input-error :messages="$errors->get('hari')" class="mt-2" />
     </div>
 
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <div>
             <x-input-label for="jam_mulai" value="Jam Mulai" />
             <x-text-input id="jam_mulai" name="jam_mulai" type="time" class="mt-1 block w-full"
@@ -39,23 +39,25 @@
         </div>
     </div>
 
-    <div>
-        <x-input-label for="ruangan" value="Ruangan" />
-        <x-text-input id="ruangan" name="ruangan" type="text" class="mt-1 block w-full"
-                      :value="old('ruangan', $perkuliahan->ruangan)" required />
-        <x-input-error :messages="$errors->get('ruangan')" class="mt-2" />
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <div>
+            <x-input-label for="ruangan" value="Ruangan" />
+            <x-text-input id="ruangan" name="ruangan" type="text" class="mt-1 block w-full"
+                          :value="old('ruangan', $perkuliahan->ruangan)" required />
+            <x-input-error :messages="$errors->get('ruangan')" class="mt-2" />
+        </div>
+
+        <div>
+            <x-input-label for="semester" value="Semester / Tahun Ajaran (opsional)" />
+            <x-text-input id="semester" name="semester" type="text" class="mt-1 block w-full"
+                          placeholder="contoh: 2026/2027 Ganjil"
+                          :value="old('semester', $perkuliahan->semester)" />
+            <x-input-error :messages="$errors->get('semester')" class="mt-2" />
+        </div>
     </div>
 
-    <div>
-        <x-input-label for="semester" value="Semester / Tahun Ajaran (opsional)" />
-        <x-text-input id="semester" name="semester" type="text" class="mt-1 block w-full"
-                      placeholder="contoh: 2026/2027 Ganjil"
-                      :value="old('semester', $perkuliahan->semester)" />
-        <x-input-error :messages="$errors->get('semester')" class="mt-2" />
-    </div>
-
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-3 border-t border-gray-100 pt-5">
         <x-primary-button>Simpan</x-primary-button>
-        <a href="{{ route($prefix.'.perkuliahan.index') }}" class="text-sm text-gray-600 hover:underline">Batal</a>
+        <x-link-button variant="secondary" :href="route($prefix.'.perkuliahan.index')">Batal</x-link-button>
     </div>
 </div>

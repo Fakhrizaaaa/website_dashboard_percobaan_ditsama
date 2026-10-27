@@ -1,17 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Edit Jadwal Ujian</h2>
+        <h2 class="text-xl font-semibold text-gray-800">Edit Jadwal Ujian</h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm sm:rounded-lg p-6">
-                <form method="POST" action="{{ route('admin.ujian.update', $ujian) }}">
-                    @csrf
-                    @method('PUT')
-                    @include('ujian._form')
-                </form>
-            </div>
-        </div>
-    </div>
+    <x-form-card :action="route('admin.ujian.update', $ujian)" method="PUT">
+        @include('ujian._form')
+    </x-form-card>
 </x-app-layout>

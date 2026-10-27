@@ -1,170 +1,120 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
-                    </a>
-                </div>
+@php
+    $role = Auth::user()->role;
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard', 'admin.dashboard', 'dosen.dashboard', 'mhs.dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+    // Menu per role: judul bagian => daftar [label, nama route, pola route aktif, ikon]
+    $sections = match ($role) {
+        'admin' => [
+            'Akademik' => [
+                ['Mata Kuliah', 'admin.mata-kuliah.index', 'admin.mata-kuliah.*', 'book'],
+                ['Perkuliahan', 'admin.perkuliahan.index', 'admin.perkuliahan.*', 'calendar'],
+                ['Ujian', 'admin.ujian.index', 'admin.ujian.*', 'document'],
+            ],
+            'Pengguna & Informasi' => [
+                ['Kelola User', 'admin.users.index', 'admin.users.*', 'user'],
+                ['Pengumuman', 'admin.pengumuman.index', 'admin.pengumuman.*', 'bell'],
+            ],
+        ],
+        'dosen' => [
+            'Akademik' => [
+                ['Mata Kuliah', 'dosen.mata-kuliah.index', 'dosen.mata-kuliah.*', 'book'],
+                ['Perkuliahan', 'dosen.perkuliahan.index', 'dosen.perkuliahan.*', 'calendar'],
+            ],
+        ],
+        default => [
+            'Akademik' => [
+                ['Jadwal Kuliah', 'mhs.jadwal-kuliah', 'mhs.jadwal-kuliah', 'calendar'],
+                ['Jadwal Ujian', 'mhs.jadwal-ujian', 'mhs.jadwal-ujian', 'document'],
+            ],
+            'Informasi' => [
+                ['Informasi Kampus', 'mhs.informasi', 'mhs.informasi', 'bell'],
+            ],
+        ],
+    };
 
-                    @if (Auth::user()->role === 'admin')
-                        <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
-                            {{ __('Kelola User') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('admin.mata-kuliah.index')" :active="request()->routeIs('admin.mata-kuliah.*')">
-                            {{ __('Mata Kuliah') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('admin.perkuliahan.index')" :active="request()->routeIs('admin.perkuliahan.*')">
-                            {{ __('Perkuliahan') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('admin.ujian.index')" :active="request()->routeIs('admin.ujian.*')">
-                            {{ __('Ujian') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('admin.pengumuman.index')" :active="request()->routeIs('admin.pengumuman.*')">
-                            {{ __('Pengumuman') }}
-                        </x-nav-link>
-                    @elseif (Auth::user()->role === 'dosen')
-                        <x-nav-link :href="route('dosen.mata-kuliah.index')" :active="request()->routeIs('dosen.mata-kuliah.*')">
-                            {{ __('Mata Kuliah') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('dosen.perkuliahan.index')" :active="request()->routeIs('dosen.perkuliahan.*')">
-                            {{ __('Perkuliahan') }}
-                        </x-nav-link>
-                    @elseif (Auth::user()->role === 'mhs')
-                        <x-nav-link :href="route('mhs.jadwal-kuliah')" :active="request()->routeIs('mhs.jadwal-kuliah')">
-                            {{ __('Jadwal Kuliah') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('mhs.jadwal-ujian')" :active="request()->routeIs('mhs.jadwal-ujian')">
-                            {{ __('Jadwal Ujian') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('mhs.informasi')" :active="request()->routeIs('mhs.informasi')">
-                            {{ __('Informasi') }}
-                        </x-nav-link>
-                    @endif
-                </div>
+    $roleLabel = ['admin' => 'Admin', 'dosen' => 'Dosen', 'mhs' => 'Mahasiswa'][$role] ?? ucfirst($role);
+@endphp
+
+<!-- Top bar khusus layar kecil (tombol buka sidebar) -->
+<div class="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-gray-200 bg-white px-4 lg:hidden">
+    <button type="button" @click="sidebarOpen = true"
+            class="rounded-md p-2 text-gray-500 hover:bg-gray-100 focus:outline-none" aria-label="Buka menu">
+        <x-icon name="bars" class="h-6 w-6" />
+    </button>
+    <span class="font-semibold text-gray-900">Portal Akademik</span>
+</div>
+
+<!-- Overlay (layar kecil) -->
+<div x-show="sidebarOpen" x-transition.opacity @click="sidebarOpen = false"
+     class="fixed inset-0 z-40 bg-gray-900/50 lg:hidden" style="display: none;"></div>
+
+<!-- Sidebar -->
+<aside :class="{ '!translate-x-0': sidebarOpen }"
+       class="fixed inset-y-0 left-0 z-50 flex w-64 -translate-x-full flex-col bg-slate-900 transition-transform duration-200 lg:translate-x-0">
+    <!-- Logo -->
+    <div class="flex h-16 shrink-0 items-center justify-between border-b border-slate-800 px-4">
+        <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
+            <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 text-white">
+                <x-icon name="book" class="h-5 w-5" />
+            </span>
+            <span class="leading-tight">
+                <span class="block text-sm font-semibold text-white">Portal Akademik</span>
+                <span class="block text-xs text-slate-400">{{ $roleLabel }}</span>
+            </span>
+        </a>
+
+        <button type="button" @click="sidebarOpen = false"
+                class="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-white lg:hidden" aria-label="Tutup menu">
+            <x-icon name="x-mark" class="h-5 w-5" />
+        </button>
+    </div>
+
+    <!-- Menu -->
+    <nav class="flex-1 space-y-6 overflow-y-auto px-3 py-4">
+        <div class="space-y-1">
+            <p class="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-slate-500">Menu Utama</p>
+            <x-sidebar-link :href="route('dashboard')" icon="home"
+                :active="request()->routeIs('dashboard', 'admin.dashboard', 'dosen.dashboard', 'mhs.dashboard')">
+                Dashboard
+            </x-sidebar-link>
+        </div>
+
+        @foreach ($sections as $title => $items)
+            <div class="space-y-1">
+                <p class="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-slate-500">{{ $title }}</p>
+                @foreach ($items as [$label, $routeName, $pattern, $icon])
+                    <x-sidebar-link :href="route($routeName)" :icon="$icon" :active="request()->routeIs($pattern)">
+                        {{ $label }}
+                    </x-sidebar-link>
+                @endforeach
             </div>
+        @endforeach
+    </nav>
 
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
+    <!-- Akun -->
+    <div class="shrink-0 border-t border-slate-800 p-3">
+        <div class="flex items-center gap-3 px-2 py-2">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-500 text-sm font-semibold text-white">
+                {{ strtoupper(mb_substr(Auth::user()->name, 0, 1)) }}
+            </span>
+            <div class="min-w-0">
+                <p class="truncate text-sm font-medium text-white">{{ Auth::user()->name }}</p>
+                <p class="truncate text-xs text-slate-400">{{ Auth::user()->email }}</p>
             </div>
+        </div>
 
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+        <div class="mt-1 space-y-1">
+            <x-sidebar-link :href="route('profile.edit')" icon="user-circle" :active="request()->routeIs('profile.*')">
+                Profil Saya
+            </x-sidebar-link>
+
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit"
+                        class="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white">
+                    <x-icon name="logout" class="h-5 w-5 shrink-0 text-slate-400 group-hover:text-white" />
+                    <span>Keluar</span>
                 </button>
-            </div>
+            </form>
         </div>
     </div>
-
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard', 'admin.dashboard', 'dosen.dashboard', 'mhs.dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-
-            @if (Auth::user()->role === 'admin')
-                <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
-                    {{ __('Kelola User') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('admin.mata-kuliah.index')" :active="request()->routeIs('admin.mata-kuliah.*')">
-                    {{ __('Mata Kuliah') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('admin.perkuliahan.index')" :active="request()->routeIs('admin.perkuliahan.*')">
-                    {{ __('Perkuliahan') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('admin.ujian.index')" :active="request()->routeIs('admin.ujian.*')">
-                    {{ __('Ujian') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('admin.pengumuman.index')" :active="request()->routeIs('admin.pengumuman.*')">
-                    {{ __('Pengumuman') }}
-                </x-responsive-nav-link>
-            @elseif (Auth::user()->role === 'dosen')
-                <x-responsive-nav-link :href="route('dosen.mata-kuliah.index')" :active="request()->routeIs('dosen.mata-kuliah.*')">
-                    {{ __('Mata Kuliah') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('dosen.perkuliahan.index')" :active="request()->routeIs('dosen.perkuliahan.*')">
-                    {{ __('Perkuliahan') }}
-                </x-responsive-nav-link>
-            @elseif (Auth::user()->role === 'mhs')
-                <x-responsive-nav-link :href="route('mhs.jadwal-kuliah')" :active="request()->routeIs('mhs.jadwal-kuliah')">
-                    {{ __('Jadwal Kuliah') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('mhs.jadwal-ujian')" :active="request()->routeIs('mhs.jadwal-ujian')">
-                    {{ __('Jadwal Ujian') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('mhs.informasi')" :active="request()->routeIs('mhs.informasi')">
-                    {{ __('Informasi') }}
-                </x-responsive-nav-link>
-            @endif
-        </div>
-
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
-            </div>
-        </div>
-    </div>
-</nav>
+</aside>

@@ -1,31 +1,32 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard Dosen') }}
-        </h2>
+        <h2 class="text-xl font-semibold text-gray-800">Dashboard Dosen</h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <h3 class="text-lg font-bold text-indigo-600 mb-2">Selamat Datang, {{ Auth::user()->name }}!</h3>
-                <p class="text-gray-600 mb-6">Area khusus pengajaran dan pengampuan mata kuliah.</p>
+    <div class="py-8">
+        <div class="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
+            <!-- Sambutan -->
+            <div class="rounded-2xl bg-indigo-600 px-6 py-8 text-white shadow-sm sm:px-8">
+                <p class="text-sm text-indigo-100">Selamat datang</p>
+                <h3 class="mt-1 text-2xl font-bold">{{ Auth::user()->name }}</h3>
+                <p class="mt-2 text-sm text-indigo-100">Area khusus pengajaran dan pengampuan mata kuliah.</p>
+            </div>
 
-                <!-- Grid Menu Dosen -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- 1. Kelola Mata Kuliah (sudah jadi link) -->
-                    <a href="{{ route('dosen.mata-kuliah.index') }}" class="block p-5 bg-indigo-50 border border-indigo-200 rounded-lg hover:shadow-md transition">
-                        <h4 class="font-bold text-indigo-800 text-lg mb-1">1. Kelola Mata Kuliah</h4>
-                        <p class="text-sm text-gray-600 mb-3">Tambah dan atur mata kuliah yang kamu ampu.</p>
-                        <span class="inline-block px-3 py-1 bg-indigo-600 text-white text-xs font-semibold rounded">Akses Pengampu</span>
-                    </a>
+            <!-- Ringkasan -->
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <x-stat-card label="Mata Kuliah Diampu" :value="$jumlahMatkul" />
+                <x-stat-card label="Jadwal Kuliah" :value="$jumlahJadwal" />
+                <x-stat-card label="Mahasiswa" :value="$jumlahMahasiswa" hint="Total mahasiswa di semua mata kuliahmu" />
+            </div>
 
-                    <!-- 2. Kelola Perkuliahan -->
-                    <a href="{{ route('dosen.perkuliahan.index') }}" class="block p-5 bg-teal-50 border border-teal-200 rounded-lg hover:shadow-md transition">
-                        <h4 class="font-bold text-teal-800 text-lg mb-1">2. Kelola Perkuliahan</h4>
-                        <p class="text-sm text-gray-600 mb-3">Atur jadwal kuliah (hari, jam, ruangan) untuk mata kuliahmu.</p>
-                        <span class="inline-block px-3 py-1 bg-teal-600 text-white text-xs font-semibold rounded">Akses Pengampu</span>
-                    </a>
+            <!-- Menu -->
+            <div>
+                <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-500">Menu</h3>
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <x-menu-card :href="route('dosen.mata-kuliah.index')" icon="book" color="indigo"
+                        title="Kelola Mata Kuliah" desc="Tambah dan atur mata kuliah yang kamu ampu." />
+                    <x-menu-card :href="route('dosen.perkuliahan.index')" icon="calendar" color="teal"
+                        title="Kelola Perkuliahan" desc="Atur jadwal kuliah (hari, jam, ruangan) untuk mata kuliahmu." />
                 </div>
             </div>
         </div>

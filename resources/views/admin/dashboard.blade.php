@@ -1,51 +1,39 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard Admin Akademik') }}
-        </h2>
+        <h2 class="text-xl font-semibold text-gray-800">Dashboard Admin</h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <h3 class="text-lg font-bold text-blue-600 mb-2">Selamat Datang, Admin ({{ Auth::user()->name }})!</h3>
-                <p class="text-gray-600 mb-6">Kelola seluruh data sistem akademik perkuliahan di sini.</p>
+    <div class="py-8">
+        <div class="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
+            <!-- Sambutan -->
+            <div class="rounded-2xl bg-indigo-600 px-6 py-8 text-white shadow-sm sm:px-8">
+                <p class="text-sm text-indigo-100">Selamat datang kembali</p>
+                <h3 class="mt-1 text-2xl font-bold">{{ Auth::user()->name }}</h3>
+                <p class="mt-2 text-sm text-indigo-100">Kelola seluruh data sistem akademik perkuliahan di sini.</p>
+            </div>
 
-                <!-- Grid Menu Admin -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <!-- 1. Kelola User -->
-                    <a href="{{ route('admin.users.index') }}" class="block p-5 bg-blue-50 border border-blue-200 rounded-lg hover:shadow-md transition">
-                        <h4 class="font-bold text-blue-800 text-lg mb-1">1. Kelola User</h4>
-                        <p class="text-sm text-gray-600 mb-3">Kelola data Admin, Dosen, dan Mahasiswa.</p>
-                        <span class="inline-block px-3 py-1 bg-blue-600 text-white text-xs font-semibold rounded">Akses Penuh</span>
-                    </a>
+            <!-- Ringkasan -->
+            <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                <x-stat-card label="Total User" :value="$jumlahUser" />
+                <x-stat-card label="Mata Kuliah" :value="$jumlahMatkul" />
+                <x-stat-card label="Jadwal Kuliah" :value="$jumlahJadwal" />
+                <x-stat-card label="Jadwal Ujian" :value="$jumlahUjian" />
+            </div>
 
-                    <!-- 2. Kelola Mata Kuliah (sudah jadi link) -->
-                    <a href="{{ route('admin.mata-kuliah.index') }}" class="block p-5 bg-emerald-50 border border-emerald-200 rounded-lg hover:shadow-md transition">
-                        <h4 class="font-bold text-emerald-800 text-lg mb-1">2. Kelola Matkul</h4>
-                        <p class="text-sm text-gray-600 mb-3">Tambah & atur kurikulum mata kuliah.</p>
-                        <span class="inline-block px-3 py-1 bg-emerald-600 text-white text-xs font-semibold rounded">Akses Penuh</span>
-                    </a>
-
-                    <!-- 3. Kelola Perkuliahan -->
-                    <a href="{{ route('admin.perkuliahan.index') }}" class="block p-5 bg-purple-50 border border-purple-200 rounded-lg hover:shadow-md transition">
-                        <h4 class="font-bold text-purple-800 text-lg mb-1">3. Kelola Kuliah</h4>
-                        <p class="text-sm text-gray-600 mb-3">Atur jadwal kelas & pembagian dosen.</p>
-                        <span class="inline-block px-3 py-1 bg-purple-600 text-white text-xs font-semibold rounded">Akses Penuh</span>
-                    </a>
-
-                    <!-- 4. Kelola Ujian -->
-                    <a href="{{ route('admin.ujian.index') }}" class="block p-5 bg-amber-50 border border-amber-200 rounded-lg hover:shadow-md transition">
-                        <h4 class="font-bold text-amber-800 text-lg mb-1">4. Kelola Ujian</h4>
-                        <p class="text-sm text-gray-600 mb-3">Jadwal UTS/UAS & pengawasan ujian.</p>
-                        <span class="inline-block px-3 py-1 bg-amber-600 text-white text-xs font-semibold rounded">Akses Penuh</span>
-                    </a>
-                </div>
-
-                <div class="mt-6">
-                    <a href="{{ route('admin.pengumuman.index') }}" class="text-sm text-blue-600 hover:underline">
-                        Kelola Pengumuman (tampil di portal mahasiswa) &rarr;
-                    </a>
+            <!-- Menu -->
+            <div>
+                <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-500">Menu Pengelolaan</h3>
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    <x-menu-card :href="route('admin.users.index')" icon="user" color="blue"
+                        title="Kelola User" desc="Kelola data admin, dosen, mahasiswa, dan KRS." />
+                    <x-menu-card :href="route('admin.mata-kuliah.index')" icon="book" color="emerald"
+                        title="Kelola Mata Kuliah" desc="Tambah dan atur mata kuliah beserta dosen pengampu." />
+                    <x-menu-card :href="route('admin.perkuliahan.index')" icon="calendar" color="violet"
+                        title="Kelola Perkuliahan" desc="Atur jadwal kelas, jam, dan ruangan." />
+                    <x-menu-card :href="route('admin.ujian.index')" icon="document" color="amber"
+                        title="Kelola Ujian" desc="Atur jadwal UTS dan UAS." />
+                    <x-menu-card :href="route('admin.pengumuman.index')" icon="bell" color="rose"
+                        title="Kelola Pengumuman" desc="Buat pengumuman yang tampil di portal mahasiswa." />
                 </div>
             </div>
         </div>

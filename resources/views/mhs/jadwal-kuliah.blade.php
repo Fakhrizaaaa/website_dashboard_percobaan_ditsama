@@ -1,49 +1,45 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Jadwal Perkuliahan</h2>
+        <h2 class="text-xl font-semibold text-gray-800">Jadwal Perkuliahan</h2>
+        <p class="text-sm text-gray-500">Jadwal kelas mingguan dari mata kuliah yang kamu ambil.</p>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">
+    <div class="py-8">
+        <div class="mx-auto max-w-5xl space-y-4 px-4 sm:px-6 lg:px-8">
             @if ($jadwal->isEmpty())
-                <div class="bg-white shadow-sm sm:rounded-lg p-6 text-gray-600">
+                <x-card class="p-8 text-center text-gray-600">
                     Belum ada jadwal kuliah. Pastikan kamu sudah terdaftar di mata kuliah (hubungi admin untuk mengisi KRS),
                     dan jadwalnya sudah dibuat oleh dosen atau admin.
-                </div>
+                </x-card>
             @else
                 @foreach ($hariList as $hari)
                     @if ($jadwal->has($hari))
-                        <div class="bg-white shadow-sm sm:rounded-lg p-6 {{ $hari === $hariIni ? 'ring-2 ring-sky-400' : '' }}">
-                            <h3 class="font-bold text-sky-800 mb-3">
-                                {{ $hari }}
+                        <x-card class="overflow-hidden {{ $hari === $hariIni ? 'ring-2 ring-indigo-400' : '' }}">
+                            <div class="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-6 py-3">
+                                <h3 class="font-semibold text-gray-900">{{ $hari }}</h3>
                                 @if ($hari === $hariIni)
-                                    <span class="ml-2 text-xs bg-sky-600 text-white px-2 py-0.5 rounded">Hari ini</span>
+                                    <x-badge color="indigo">Hari ini</x-badge>
                                 @endif
-                            </h3>
-
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full text-sm text-left">
-                                    <thead class="border-b font-semibold text-gray-700">
-                                        <tr>
-                                            <th class="py-2 pr-4">Jam</th>
-                                            <th class="py-2 pr-4">Mata Kuliah</th>
-                                            <th class="py-2 pr-4">Dosen</th>
-                                            <th class="py-2">Ruangan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($jadwal[$hari] as $p)
-                                            <tr class="border-b last:border-0">
-                                                <td class="py-2 pr-4 whitespace-nowrap">{{ substr($p->jam_mulai, 0, 5) }} - {{ substr($p->jam_selesai, 0, 5) }}</td>
-                                                <td class="py-2 pr-4">{{ $p->mataKuliah->kode }} - {{ $p->mataKuliah->nama }}</td>
-                                                <td class="py-2 pr-4">{{ $p->mataKuliah->dosen?->name ?? '-' }}</td>
-                                                <td class="py-2">{{ $p->ruangan }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
                             </div>
-                        </div>
+
+                            <ul class="divide-y divide-gray-100">
+                                @foreach ($jadwal[$hari] as $p)
+                                    <li class="flex flex-col gap-2 px-6 py-4 sm:flex-row sm:items-center sm:gap-6">
+                                        <div class="flex w-36 shrink-0 items-center gap-2 text-sm font-semibold text-indigo-600">
+                                            <x-icon name="clock" class="h-4 w-4" />
+                                            {{ substr($p->jam_mulai, 0, 5) }} - {{ substr($p->jam_selesai, 0, 5) }}
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="font-medium text-gray-900">{{ $p->mataKuliah->nama }}</p>
+                                            <p class="text-sm text-gray-500">
+                                                {{ $p->mataKuliah->kode }} &middot; {{ $p->mataKuliah->dosen?->name ?? 'Dosen belum ditentukan' }}
+                                            </p>
+                                        </div>
+                                        <x-badge>{{ $p->ruangan }}</x-badge>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </x-card>
                     @endif
                 @endforeach
             @endif
